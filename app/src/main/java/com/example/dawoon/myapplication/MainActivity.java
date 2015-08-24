@@ -1,41 +1,27 @@
 package com.example.dawoon.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import android.os.AsyncTask;
+import java.util.Observable;
+import java.util.Observer;
 
-import org.json.JSONObject;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity implements Observer {
 
    // ArrayList<ResultListView> arr_result;
 
@@ -142,66 +128,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class MyHttpTask extends AsyncTask<String, Integer, String> {
-
-        private String readStream(InputStream in) {
-            BufferedReader reader = null;
-            StringBuilder sb = new StringBuilder();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            return sb.toString();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                String mSearchStr = params[0];
-                String searchStr = URLEncoder.encode(mSearchStr, "UTF-8");
-                String bingUrl = "https://api.datamarket.azure.com/Bing/Search/v1/Composite?Sources=%27web%27&Query=%27" + searchStr + "%27&$top=1&$format=json";
-
-                String accountKey = "r09ZcqXB+F795vzZwVFmZwsXF1/+xHOD6F6iM+iWD/s=";
-                String accountKeyEnc = Base64.encodeToString((accountKey + ":" + accountKey).getBytes(), Base64.NO_WRAP);
-
-                URL url = null;
-                url = new URL(bingUrl);
-
-                URLConnection urlConnection = url.openConnection();
-                urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
-                InputStream response = urlConnection.getInputStream();
-                String res = readStream(response);
-
-                JSONObject json = new JSONObject(res);
-                return json.getJSONObject("d").getJSONArray("results").getJSONObject(0).getString("WebTotal");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return "";
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.d("###### HTTP result", s);
-            super.onPostExecute(s);
-        }
-    }
+    private SearchResult searchResult = null;
 
     public void compareOnClick(View v) throws IOException {
 
@@ -210,98 +137,27 @@ public class MainActivity extends AppCompatActivity {
         EditText text_SecondKeyword = null;
         text_SecondKeyword = (EditText) findViewById(R.id.secondKey);
 
-        String firstKeyword1 = text_FirstKeyword.getText().toString();
-        String secondkeyword1 = text_SecondKeyword.getText().toString();
+        String firstKeyword = text_FirstKeyword.getText().toString();
+        String secondkeyword = text_SecondKeyword.getText().toString();
 
-
-        Toast.makeText(getApplicationContext(), "Search 뭐시기뭐시기", Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(""));
-
-        intent.putExtra("FirstKeyword", firstKeyword1);
-        intent.putExtra("SecondKeyword", secondkeyword1);
+//        Toast.makeText(getApplicationContext(), "Search 뭐시기뭐시기", Toast.LENGTH_LONG).show();
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(""));
+//
+//        intent.putExtra("FirstKeyword", firstKeyword);
+//        intent.putExtra("SecondKeyword", secondkeyword);
 
         // startActivity(intent);
 
-        (new MyHttpTask()).execute(firstKeyword1);
+        Button compareBtn = (Button) findViewById(R.id.compareBtn);
+        compareBtn.setEnabled(false);
 
-        // 검색 결과
-//        String googleURL = "http://www.google.com/search?q=";
-//
-////        googleURL = googleURL + URLEncoder.encode(firstKeyword1 + "&btnG=Search&meta=", "utf-8");
-//        googleURL = googleURL + firstKeyword1;
-//        URL search_result = new URL(googleURL);
-//
-//
-//        HttpURLConnection connection = null;
-//        /*
-//        BufferedReader bin = new BufferedReader(new InputStreamReader(search_result.openStream()));
-//        String line;
-//        while ((line = bin.readLine()) != null)
-//        {
-//            System.out.println(line);
-//        }
-//        bin.close();
-//*/
-//
-//        String result11 = null;
-//        String result22 = null;
-//
-//        connection = (HttpURLConnection) search_result.openConnection();
-//        connection.setRequestMethod("GET");
-//        connection.setConnectTimeout(3000);
-//        connection.setReadTimeout(3000);
-//        InputStream inputStream = null;
-//
-//
-//        try {
-//            connection.connect();
-//        }catch(Exception e)
-//        {
-//            e.toString();
-//        }
-//
-//        //if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
-//        try {
-//            if (connection != null) {
-//                inputStream = new BufferedInputStream(connection.getInputStream());
-//                result11 = inputStream.toString().replaceAll("[^0-9]", "");
-//                //}
-//            }
-//        }catch (Exception e)
-//        {
-//            e.toString();
-//            Log.e("Error", e.getMessage());
-//            e.printStackTrace();
-//        }
-//        googleURL= "http://www.google.com/search?q=";
-//
-//        googleURL = googleURL + URLEncoder.encode(secondkeyword1 + "&btnG=Search&meta=", "utf-8");
-//        search_result = new URL(googleURL);
-//
-//
-//        connection = null;
-//        connection = (HttpURLConnection) search_result.openConnection();
-//        connection.setRequestMethod("GET");
-//        connection.setConnectTimeout(3000);
-//        connection.setReadTimeout(3000);
-//
-//        inputStream = null;
-//
-//        //connection.connect();
-//
-//     try {
-//        if (connection != null) {
-//            inputStream = connection.getInputStream();
-//            result11 = inputStream.toString().replaceAll("[^0-9]", "");
-//            //}
-//        }
-//    }catch (Exception e)
-//    {
-//        e.toString();
-//        Log.e("Error", e.getMessage());
-//        e.printStackTrace();
-//    }
+        this.searchResult = new SearchResult(firstKeyword, secondkeyword);
+        this.searchResult.addObserver(this);
+        this.searchResult.startSearch();
+
+        //(new MyHttpTask()).execute(firstKeyword);
+
 
 
 //        //db로 저장하기
@@ -327,4 +183,16 @@ public class MainActivity extends AppCompatActivity {
 //        cursor.close();
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        Log.d("########## " + this.searchResult.getKeyword1(), String.valueOf(this.searchResult.getResult1()));
+        Log.d("########## " + this.searchResult.getKeyword2(), String.valueOf(this.searchResult.getResult2()));
+
+        // save to database
+
+        this.searchResult.deleteObserver(this);
+
+        Button compareBtn = (Button) findViewById(R.id.compareBtn);
+        compareBtn.setEnabled(true);
+    }
 }
