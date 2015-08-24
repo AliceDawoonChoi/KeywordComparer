@@ -2,7 +2,6 @@ package com.example.dawoon.myapplication;
 
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -122,6 +121,7 @@ public class SearchResult extends Observable {
     }
 
     public int getResult1() {
+        int a = this.result1;
         return this.result1;
     }
 
