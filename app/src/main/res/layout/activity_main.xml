@@ -46,7 +46,8 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/result_ListView" />
+            android:id="@+id/result_ListView"
+            android:background="#e2fff5" />
     </LinearLayout>
 
 </RelativeLayout>

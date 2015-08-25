@@ -24,6 +24,9 @@ public class DatabaseConnector
       // create a new DatabaseOpenHelper
       databaseOpenHelper = 
          new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
+
+      open();
+
    }
 
    // open the database connection
@@ -74,7 +77,7 @@ public class DatabaseConnector
    // return a Cursor with all contact names in the database
    public Cursor getAllContacts()
    {
-      return database.query("searchResult", new String[] {"id", "firstkey", "secondkey", "result1", "result2"},
+      return database.query("searchResult", new String[] {"firstkey", "secondkey", "result1", "result2"},
          null, null, null, null, "firstkey");
    } 
 
