@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/result_ListView"
             android:longClickable="true"
-            android:clickable="true" />
+            android:clickable="true"
+            android:background="#fff3e6" />
     </LinearLayout>
 
 </RelativeLayout>

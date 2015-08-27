@@ -150,8 +150,13 @@ public class MainActivity extends Activity implements Observer {
 
                     // set the AlertDialog's title
                     builder.setTitle(
-                            "Edit or Delete");
+                            "Option(Edit/Delete/Search to go to Bing)");
 
+                    Intent intent = new Intent();
+                    intent.putExtra(intent.EXTRA_TEXT, getString(R.string.bing_first, ((ViewHolder) view.getTag()).a.getText().toString()));
+                    intent.putExtra(intent.EXTRA_TEXT, getString(R.string.bing_second, ((ViewHolder) view.getTag()).b.getText().toString()));
+//        shareIntent.putExtra(Intent.EXTRA_TEXT,
+//                getString(R.string.shareMessage, urlString))
 
 
                     // set list of items to display in dialog
@@ -186,10 +191,10 @@ public class MainActivity extends Activity implements Observer {
                                             loadDB();
 //                                            delete1(e);
                                             break;
-                                        case 2 : // search firstkeyword
+                                        case 2: // search firstkeyword
                                             shareSearch(a);
                                             break;
-                                        case 3 : // search secondkeyword
+                                        case 3: // search secondkeyword
                                             shareSearch(b);
                                             break;
                                     }
