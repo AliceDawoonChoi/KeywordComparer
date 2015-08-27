@@ -77,8 +77,8 @@ public class DatabaseConnector
    // return a Cursor with all contact names in the database
    public Cursor getAllContacts()
    {
-      return database.query("searchResult", new String[] {"firstkey", "secondkey", "result1", "result2"},
-         null, null, null, null, "firstkey");
+      return database.query("searchResult", new String[] {"firstkey", "secondkey", "result1", "result2", "id"},
+         null, null, null, null, "id");
    } 
 
    // return a Cursor containing specified contact's information 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +44,8 @@ public class MainActivity extends Activity implements Observer {
     private ArrayList<Array1> mArrayList;
     private ListView lv;
     private CustomAdapter adapter;
-    private String firstkey1;
-    private String secondkey2;
+    private EditText firstkey1;
+    private EditText secondkey2;
     private int id_DB;
 
 
@@ -91,6 +91,7 @@ public class MainActivity extends Activity implements Observer {
                 String secondKey = cursor.getString(1);
                 int result1 = cursor.getInt(2);
                 int result2 = cursor.getInt(3);
+                int id = cursor.getInt(4);
 //                String date = cursor.getString(5);
 
 ////                String list[] = {String.valueOf(id), firstKey, secondKey, String.valueOf(result1) ,String.valueOf(result2) };
@@ -99,7 +100,7 @@ public class MainActivity extends Activity implements Observer {
 //                SearchResult.add(id, list);
 //                SearchResult.add(firstKey + " VS " + secondKey + " : " + result1 + " VS " + result2);
 
-                mArrayList.add(new Array1(firstKey, secondKey, result1, result2));
+                mArrayList.add(new Array1(firstKey, secondKey, result1, result2, id));
 
             }
             cursor.close();
@@ -108,68 +109,19 @@ public class MainActivity extends Activity implements Observer {
             lv = (ListView)findViewById(id.result_ListView);
             lv.setAdapter(adapter);
 
-
             /////////////////////////test
+            
+            lv.setOnItemLongClickListener(itemLongClickListener);
 
-            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    // 쭉 눌렀을 때 다이얼로그 창이 떠야함.
-                    Toast.makeText(getApplicationContext(), (position + 1) + "까꿍", Toast.LENGTH_SHORT).show();
-
-                    return false;
-                }
+//            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //                @Override
-//            public boolean onMenuItemLongClick(MenuItem item){
-//                    switch (item.getItemId()) {
-//                        case id.linear_firstkey_searchBtn: // 롱클릭시 첫번째 검색어 사이트 이동버튼
-//                            break;
-//                        case id.linear_secondkey_serachBtn: //롱클릭시 두번째 검색어 사이트 이동버튼
-//                            break;
-//                        case id.linear_B_EditBTn: // 수정 버튼 : db를 지우고 화면 텍스트에 보여준다
-//
-//                            DatabaseConnector databaseConnector;
-//                            databaseConnector = new DatabaseConnector();
-//
-//                            databaseConnector.deleteContact();
-//                            break;
-//                        case id.linear_B_DeleteBtn: // 삭제 버튼 : db를 지운다. 화면 텍스트 아무것도 안보여줌.
-//                            DatabaseConnector databaseConnector;
-//                            databaseConnector = new DatabaseConnector(this);
-//                            databaseConnector.deleteContact();
-//                            break;
-//                    }
-            });
-
-//            // 어댑터 준비
-//            resultAdapter = new ArrayAdapter<String>(this, layout.layout_result, SearchResult);
-//
-//            // 어댑터 연결
-//            ListView result_list = (ListView) findViewById(id.list_item);
-//            result_list.setAdapter(resultAdapter);
-//
-//            // 리스트뷰 속성
-//            // 항목을 선택하는 모드
-//            result_list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-//            // 항목 사이의 구분선(검정)
-//            result_list.setDivider(new ColorDrawable(Color.BLACK));
-//            // 구분선 높이 지정
-//            result_list.setDividerHeight(2);
-
-
-//
-//            // 검색 키들.
-//            TextView textview_FirstKeyword = (TextView) findViewById(id.firstKey);
-//            TextView textview_SecondKeyword = (TextView) findViewById(id.secondKey);
-//
-//            Intent intent1 = getIntent();
-//
-//            String firstKeyword = intent1.getStringExtra("FirstKeyword");
-//            String secondKeyword = intent1.getStringExtra("SecondKeyword");
-//
-//            textview_FirstKeyword.setText(String.valueOf(firstKeyword));
-//            textview_SecondKeyword.setText(String.valueOf(secondKeyword));
-//
+//                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                    // 쭉 눌렀을 때 다이얼로그 창이 떠야함.
+//                    Toast.makeText(getApplicationContext(), (position + 1) + "까꿍", Toast.LENGTH_SHORT).show();
+//android.widget.AdapterView.OnItemLongClickListener itemLongClickListener;
+//                    return false;
+//                }
+//            });
             // 검색 키 관련 끝
         } catch (Exception e){
             e.toString();
@@ -177,9 +129,79 @@ public class MainActivity extends Activity implements Observer {
 
     }
 
+
+    AdapterView.OnItemLongClickListener itemLongClickListener =
+            new AdapterView.OnItemLongClickListener()
+            {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, final View view,
+                                               int position, final long id)
+                {
+                    // get the tag that the user long touched
+                    final String tag = "tag";//((TextView) view).getText().toString();
+
+                    // create a new AlertDialog
+                    AlertDialog.Builder builder =
+                            new AlertDialog.Builder(MainActivity.this);
+
+                    // set the AlertDialog's title
+                    builder.setTitle(
+                            "Edit or Delete");
+
+
+
+                    // set list of items to display in dialog
+                    builder.setItems(R.array.dialog_items,
+                            new DialogInterface.OnClickListener() {
+                                // responds to user touch by sharing, editing or
+                                // deleting a saved search
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    //mArrayList = (ArrayList<Array1>) view.getTag();
+
+                                    ViewHolder vh = new ViewHolder();
+                                    vh = (ViewHolder) view.getTag();
+                                    String a = vh.a.getText().toString();
+                                    String b = vh.b.getText().toString();
+                                    int e = Integer.parseInt(vh.e.getText().toString());
+
+                                    switch (which) {
+                                        case 0: // Edit : Delete DB and put text to textView
+                                            //firstkey1.setText(vh.a.getText().toString());
+                                           // secondkey2.setText(vh.b.getText().toString());
+//                                            delete1(e);
+                                        case 1: // Delete Delete DB
+//                                            firstkey1.setText("");
+//                                            secondkey2.setText("");
+//                                            delete1(e);
+                                        default:
+                                            delete1(e);
+                                    }
+                                }
+                            } // end DialogInterface.OnClickListener
+                    ); // end call to builder.setItems
+
+                    builder.create().show(); // display the AlertDialog
+                    return true;
+                } // end method onItemLongClick
+            }; // end OnItemLongClickListener declaration
+
+
+    class ViewHolder{
+        public TextView a;
+        public TextView b;
+        public TextView c;
+        public TextView d;
+        public TextView e;
+    }
+
     private class CustomAdapter extends BaseAdapter{
         Context context;
         private LayoutInflater mInflater;
+
+        private CustomAdapter(){}
 
         private CustomAdapter(Context context, ArrayList<Array1> mArrayList){
             this.context = context;
@@ -197,12 +219,6 @@ public class MainActivity extends Activity implements Observer {
         public long getItemId(int i){
             return i;
         }
-        class ViewHolder{
-            public TextView a;
-            public TextView b;
-            public TextView c;
-            public TextView d;
-        }
         @Override
         public View getView(int position, View converView, ViewGroup viewGroup){
             ViewHolder holder;
@@ -213,6 +229,7 @@ public class MainActivity extends Activity implements Observer {
                 holder.b = (TextView) converView.findViewById(id.tv2);
                 holder.c = (TextView) converView.findViewById(id.tv3);
                 holder.d = (TextView) converView.findViewById(id.tv4);
+                holder.e = (TextView) converView.findViewById(id.tv5);
                 converView.setTag(holder);
             }else{
                 holder = (ViewHolder) converView.getTag();
@@ -221,6 +238,7 @@ public class MainActivity extends Activity implements Observer {
             holder.b.setText(mArrayList.get(position).secondkeyword);
             holder.c.setText(String.valueOf(mArrayList.get(position).result1));
             holder.d.setText(String.valueOf(mArrayList.get(position).result2));
+            holder.e.setText(String.valueOf(mArrayList.get(position).id));
             return converView;
         }
     }
@@ -332,6 +350,13 @@ public class MainActivity extends Activity implements Observer {
         compareBtn.setEnabled(true);
     }
 
+    public void delete1(int id){
+
+        DatabaseConnector databaseConnector;
+        databaseConnector = new DatabaseConnector(this);
+
+        databaseConnector.deleteContact(id);
+    }
 
     // LongClick Dialog
     public static class LIstviewDialog extends DialogFragment{
