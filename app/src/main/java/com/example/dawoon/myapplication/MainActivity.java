@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -150,7 +151,7 @@ public class MainActivity extends Activity implements Observer {
 
                     // set the AlertDialog's title
                     builder.setTitle(
-                            "Option(Edit/Delete/Search to go to Bing)");
+                            "Option");
 
                     Intent intent = new Intent();
                     intent.putExtra(intent.EXTRA_TEXT, getString(R.string.bing_first, ((ViewHolder) view.getTag()).a.getText().toString()));
@@ -289,18 +290,25 @@ public class MainActivity extends Activity implements Observer {
             holder.c.setTextColor(Color.parseColor("black"));
             holder.d.setTextColor(Color.parseColor("black"));
 
+            DecimalFormat df = new DecimalFormat("###,###,###");
+            String ab = df.format(mArrayList.get(position).result1);
+
             holder.a.setText(mArrayList.get(position).firstkeyword);
             holder.b.setText(mArrayList.get(position).secondkeyword);
-            holder.c.setText(String.valueOf(mArrayList.get(position).result1));
-            holder.d.setText(String.valueOf(mArrayList.get(position).result2));
+            holder.c.setText(df.format(mArrayList.get(position).result1));
+            holder.d.setText(df.format(mArrayList.get(position).result2));
             holder.e.setText(String.valueOf(mArrayList.get(position).id));
 
             if (mArrayList.get(position).result1 > mArrayList.get(position).result2){
-                holder.a.setTextColor(Color.parseColor("#222A8C"));
-                holder.c.setTextColor(Color.parseColor("#222A8C"));
+                holder.a.setTextColor(Color.parseColor("green"));
+                holder.c.setTextColor(Color.parseColor("green"));
+                holder.b.setTextColor(Color.parseColor("red"));
+                holder.d.setTextColor(Color.parseColor("red"));
             }else{
-                holder.b.setTextColor(Color.parseColor("#222A8C"));
-                holder.d.setTextColor(Color.parseColor("#222A8C"));
+                holder.b.setTextColor(Color.parseColor("green"));
+                holder.d.setTextColor(Color.parseColor("green"));
+                holder.a.setTextColor(Color.parseColor("red"));
+                holder.c.setTextColor(Color.parseColor("red"));
             }
 
             return converView;
@@ -516,7 +524,8 @@ public class MainActivity extends Activity implements Observer {
              mLayoutInflater = getActivity().getLayoutInflater();
             mBuilder.setView(mLayoutInflater.inflate(layout.dialog, null));
             mBuilder.setTitle("The Result");
-            mBuilder.setMessage(f1 + " : " + String.valueOf(re1) + " VS " + f2 + " : " + String.valueOf(re2));
+            DecimalFormat df = new DecimalFormat("###,###,###");
+            mBuilder.setMessage(f1 + " : " + df.format(re1) + " VS " + f2 + " : " + df.format(re2));
 
             // set the AlertDialog's negative Button
             mBuilder.setPositiveButton("Okay",
