@@ -157,6 +157,4 @@ public class SearchResult extends Observable {
         this.result2 = result2;
         if (-1 < this.result1) { notifyObservers(); }
     }
-
-
 }

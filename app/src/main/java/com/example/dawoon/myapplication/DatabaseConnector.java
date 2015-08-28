@@ -26,7 +26,6 @@ public class DatabaseConnector
          new DatabaseOpenHelper(context, DATABASE_NAME, null, 1);
 
       open();
-
    }
 
    // open the database connection
@@ -44,8 +43,7 @@ public class DatabaseConnector
    } 
 
    // inserts a new contact in the database
-   public long insertContact(String firstkey, String secondkey, int result1,
-      int result2)
+   public long insertContact(String firstkey, String secondkey, int result1, int result2)
    {
       ContentValues newContact = new ContentValues();
       newContact.put("firstkey", firstkey);
@@ -60,8 +58,7 @@ public class DatabaseConnector
    } 
 
    // updates an existing contact in the database
-   public void updateContact(long id, String firstkey, String secondkey,
-      int result1, int result2)
+   public void updateContact(long id, String firstkey, String secondkey, int result1, int result2)
    {
       ContentValues editContact = new ContentValues();
       editContact.put("firstkey", firstkey);
@@ -72,7 +69,7 @@ public class DatabaseConnector
       open(); // open the database
       database.update("searchResult", editContact, "_id=" + id, null);
       close(); // close the database
-   } // end method updateContact
+   }
 
    // return a Cursor with all contact names in the database
    public Cursor getAllContacts()
@@ -110,34 +107,16 @@ public class DatabaseConnector
       public void onCreate(SQLiteDatabase db)
       {
          // query to create a new table named contacts
-         String createQuery = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME + " (" +
-         "id integer PRIMARY KEY autoincrement, " + "firstkey text NOT NULL," +
-                 "secondkey text NOT NULL, " + "result1 integer NOT NULL, " +
-                 " result2 integer NOT NULL );";
+         String createQuery = "CREATE TABLE IF NOT EXISTS " + DATABASE_NAME +
+                 " (id integer PRIMARY KEY autoincrement, firstkey text NOT NULL," +
+                 "secondkey text NOT NULL, result1 integer NOT NULL, result2 integer NOT NULL );";
                   
          db.execSQL(createQuery); // execute query to create the database
       } 
 
       @Override
-      public void onUpgrade(SQLiteDatabase db, int oldVersion,
-          int newVersion) 
+      public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
       {
       }
-   } // end class DatabaseOpenHelper
-} // end class DatabaseConnector
-
-
-/**************************************************************************
- * (C) Copyright 1992-2014 by Deitel & Associates, Inc. and               *
- * Pearson Education, Inc. All Rights Reserved.                           *
- *                                                                        *
- * DISCLAIMER: The authors and publisher of this book have used their     *
- * best efforts in preparing the book. These efforts include the          *
- * development, research, and testing of the theories and programs        *
- * to determine their effectiveness. The authors and publisher make       *
- * no warranty of any kind, expressed or implied, with regard to these    *
- * programs or to the documentation contained in these books. The authors *
- * and publisher shall not be liable in any event for incidental or       *
- * consequential damages in connection with, or arising out of, the       *
- * furnishing, performance, or use of these programs.                     *
- **************************************************************************/
+   }
+}

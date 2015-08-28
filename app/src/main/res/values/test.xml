@@ -3,8 +3,8 @@
     <string-array name="dialog_items">
         <item>Edit</item>
         <item>Delete</item>
-        <item>Firstkeyword Search</item>
-        <item > Secondkeyword Search</item>
+        <item>Search first keyword</item>
+        <item>Search second keyword</item>
     </string-array>>
-<string name="bing_first">%s</string><string name="bing_second">%s</string>
-    </resources>
+    <string name="bing_first">%s</string><string name="bing_second">%s</string>
+</resources>
